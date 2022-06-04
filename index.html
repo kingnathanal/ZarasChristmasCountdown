@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Countdown</title>
+    <style>
+        h1{font-size: 8em;}
+        p{font-size: 2em;}
+        h2{font-size: 9em;}
+        body{
+            background-image: url("snowtree.gif");
+            background-repeat: no-repeat;
+            background-size: 100vw 100vh;
+        }
+    </style>
+
+</head>
+<body>
+    <center>
+        <h1>Countdown to Christmas</h1>
+        <p>This app lets you know how many days til Christmas</p>
+        <h2 id="countdown_clock"></h2>
+    </center>
+    <script>
+        var countDownDate = new Date("Dec 25, 2022 00:00:00").getTime();
+
+        setInterval(function() {
+            var now = new Date().getTime();
+
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if(distance != 0) {
+                document.getElementById("countdown_clock").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+            } else {
+                document.getElementById("countdown_clock").innerHTML = "Its CHRISTMAS!!!!!!!!!!!!!!!"
+            }
+    
+        });
+    </script>
+</body>
+</html>
