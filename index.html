@@ -18,13 +18,17 @@
 </head>
 <body>
     <center>
-        <h1>Countdown to Christmas <script>document.write(xmasYear);</script></h1>
+        <h1 id="header"></h1>
         <p>The number of day left til Christmas</p>
         <h2 id="countdown_clock"></h2>
     </center>
     <script>
-         
+        
+        var xmasYear = 2023;
+
         setInterval(function() {
+
+            document.getElementById("header").innerHTML = "Countdown to Christmas " + xmasYear.toString();
 
             var countDownDate = new Date("Dec 25, " + xmasYear.toString()).getTime();
             var now = new Date().getTime();
