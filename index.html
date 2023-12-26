@@ -15,18 +15,15 @@
             background-size: 100vw 100vh;
         }
     </style>
-
 </head>
 <body>
     <center>
-        <h1>Countdown to Christmas</h1>
+        <h1>Countdown to Christmas <script>document.write(xmasYear);</script></h1>
         <p>The number of day left til Christmas</p>
         <h2 id="countdown_clock"></h2>
     </center>
     <script>
-        
-        var xmasYear = 2023;
-
+         
         setInterval(function() {
 
             var countDownDate = new Date("Dec 25, " + xmasYear.toString()).getTime();
@@ -40,9 +37,9 @@
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            if((days+1) != 0) {
+            if((days+1) > 0) {
                 document.getElementById("countdown_clock").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-            } else if((days+1) < 0) {
+            } else if((days + 1) < 0) {
                 xmasYear = xmasYear + 1;
                 setInterval();
             }
