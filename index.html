@@ -11,21 +11,60 @@
 
         body {
             min-height: 100vh;
-            background-image: url("snowtree.gif");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center bottom;
+            background: linear-gradient(
+                to bottom,
+                #0d1b4b 0%,
+                #1565c0 20%,
+                #2196f3 38%,
+                #64b5f6 58%,
+                #ffb74d 78%,
+                #ffd54f 100%
+            );
             font-family: 'Mountains of Christmas', 'Comic Sans MS', cursive, Georgia, serif;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Dark overlay for readability */
-        .bg-overlay {
+        /* ── Christmas background scene ─────────────── */
+        .xmas-scene {
             position: fixed;
             inset: 0;
-            background: rgba(2, 18, 8, 0.65);
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
+        }
+
+        .moon {
+            position: absolute;
+            top: 6%;
+            right: 9%;
+            width: clamp(44px, 5vw, 74px);
+            height: clamp(44px, 5vw, 74px);
+            background: radial-gradient(circle at 36% 36%, #fffde7, #ffe082);
+            border-radius: 50%;
+            box-shadow: 0 0 18px 8px rgba(255, 224, 130, 0.55),
+                        0 0 55px 18px rgba(255, 224, 130, 0.2);
+        }
+
+        .scene-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Twinkling stars */
+        .star {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            animation: twinkle ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.2; transform: scale(0.7); }
+            to   { opacity: 0.9; transform: scale(1.4); }
         }
 
         /* ── Snowflakes ─────────────────────────────── */
@@ -94,9 +133,9 @@
         }
 
         .subtitle {
-            color: #e8f5e9;
+            color: #fff;
             font-size: clamp(1rem, 2.5vw, 1.8rem);
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8), 0 0 14px rgba(0, 0, 0, 0.5);
             text-align: center;
             margin-bottom: 22px;
         }
@@ -159,10 +198,10 @@
 
         /* ── Rotating fun message ───────────────────── */
         .fun-message {
-            color: #98fb98;
+            color: #ffe082;
             font-size: clamp(1rem, 2.5vw, 1.8rem);
             text-align: center;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
             margin: 8px 0 16px;
             min-height: 2.2em;
             transition: opacity 0.5s, color 0.3s;
@@ -205,7 +244,7 @@
 
         /* ── Wish list ──────────────────────────────── */
         .wishlist-section {
-            background: rgba(0, 0, 0, 0.72);
+            background: rgba(160, 0, 0, 0.92);
             border: 3px solid #ffd700;
             border-radius: 20px;
             padding: clamp(16px, 3vw, 28px);
@@ -352,16 +391,53 @@
 
         /* ── Footer ─────────────────────────────────── */
         .footer {
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.75);
             font-size: clamp(0.75rem, 1.5vw, 0.9rem);
             text-align: center;
             margin-top: auto;
             padding-top: 20px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
         }
     </style>
 </head>
 <body>
-    <div class="bg-overlay" aria-hidden="true"></div>
+    <!-- Christmas background scene (replaces old snowtree.gif) -->
+    <div class="xmas-scene" aria-hidden="true">
+        <div class="moon"></div>
+        <svg class="scene-svg" viewBox="0 0 1440 210" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background far hills -->
+            <ellipse cx="360" cy="240" rx="520" ry="130" fill="#90caf9" opacity="0.45"/>
+            <ellipse cx="1080" cy="240" rx="520" ry="130" fill="#90caf9" opacity="0.45"/>
+            <!-- Left trees -->
+            <polygon points="42,204 78,78 114,204" fill="#1b5e20"/>
+            <polygon points="52,204 78,95 104,204" fill="#2e7d32"/>
+            <polygon points="64,96 78,80 92,96" fill="white" opacity="0.88"/>
+            <rect x="71" y="200" width="14" height="22" fill="#6d4c41"/>
+            <polygon points="140,207 168,120 196,207" fill="#2e7d32"/>
+            <polygon points="148,207 168,130 188,207" fill="#388e3c" opacity="0.7"/>
+            <polygon points="152,131 168,121 184,131" fill="white" opacity="0.88"/>
+            <rect x="161" y="204" width="12" height="18" fill="#6d4c41"/>
+            <polygon points="198,210 218,155 238,210" fill="#1b5e20" opacity="0.85"/>
+            <polygon points="207,156 218,147 229,156" fill="white" opacity="0.82"/>
+            <rect x="212" y="208" width="10" height="14" fill="#6d4c41"/>
+            <!-- Right trees -->
+            <polygon points="1326,204 1362,78 1398,204" fill="#1b5e20"/>
+            <polygon points="1336,204 1362,95 1388,204" fill="#2e7d32"/>
+            <polygon points="1348,96 1362,80 1376,96" fill="white" opacity="0.88"/>
+            <rect x="1355" y="200" width="14" height="22" fill="#6d4c41"/>
+            <polygon points="1244,207 1272,120 1300,207" fill="#2e7d32"/>
+            <polygon points="1252,207 1272,130 1292,207" fill="#388e3c" opacity="0.7"/>
+            <polygon points="1256,131 1272,121 1288,131" fill="white" opacity="0.88"/>
+            <rect x="1265" y="204" width="12" height="18" fill="#6d4c41"/>
+            <polygon points="1202,210 1222,155 1242,210" fill="#1b5e20" opacity="0.85"/>
+            <polygon points="1211,156 1222,147 1233,156" fill="white" opacity="0.82"/>
+            <rect x="1216" y="208" width="10" height="14" fill="#6d4c41"/>
+            <!-- Front snow hills -->
+            <ellipse cx="720" cy="272" rx="960" ry="145" fill="white"/>
+            <ellipse cx="100" cy="256" rx="290" ry="92" fill="#f0f8ff" opacity="0.9"/>
+            <ellipse cx="1340" cy="258" rx="290" ry="92" fill="#f0f8ff" opacity="0.9"/>
+        </svg>
+    </div>
 
     <div class="container">
         <h1 class="main-title" id="header">🎄 Christmas Countdown 🎄</h1>
@@ -530,7 +606,7 @@
             el.style.opacity = '1';
             setTimeout(function() {
                 el.textContent = funMessages[msgIndex];
-                el.style.color  = '#98fb98';
+                el.style.color  = '#ffe082';
             }, duration);
         }
 
@@ -556,6 +632,28 @@
         }
 
         var snowTimer = setInterval(spawnSnowflake, 350);
+
+        // ── Stars ──────────────────────────────────────
+        (function spawnStars() {
+            var colors = ['#ffffff', '#ffe082', '#fff9c4', '#ffcc02', '#ff8a65', '#b3e5fc'];
+            var fragment = document.createDocumentFragment();
+            for (var i = 0; i < 50; i++) {
+                var el = document.createElement('div');
+                el.className = 'star';
+                el.setAttribute('aria-hidden', 'true');
+                var size = (Math.random() * 3 + 1.5).toFixed(1);
+                el.style.cssText =
+                    'left:'               + (Math.random() * 100).toFixed(1) + 'vw;' +
+                    'top:'                + (Math.random() * 44).toFixed(1)  + 'vh;' +
+                    'width:'              + size + 'px;' +
+                    'height:'             + size + 'px;' +
+                    'background:'         + colors[Math.floor(Math.random() * colors.length)] + ';' +
+                    'animation-duration:' + (Math.random() * 2.5 + 1.5).toFixed(2) + 's;' +
+                    'animation-delay:'    + (Math.random() * 3).toFixed(2)           + 's';
+                fragment.appendChild(el);
+            }
+            document.body.appendChild(fragment);
+        })();
 
         function toggleSnow(btn) {
             snowEnabled = !snowEnabled;
