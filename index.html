@@ -4,54 +4,804 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Countdown</title>
+    <title>🎄 Christmas Countdown 🎄</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        h1{font-size: 6em;}
-        p{font-size: 2em;}
-        h2{font-size: 9em;}
-        body{
-            background-image: url("snowtree.gif");
-            background-repeat: no-repeat;
-            background-size: 100vw 100vh;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                #0d1b4b 0%,
+                #1565c0 20%,
+                #2196f3 38%,
+                #64b5f6 58%,
+                #ffb74d 78%,
+                #ffd54f 100%
+            );
+            font-family: 'Mountains of Christmas', 'Comic Sans MS', cursive, Georgia, serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Christmas background scene ─────────────── */
+        .xmas-scene {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .moon {
+            position: absolute;
+            top: 6%;
+            right: 9%;
+            width: clamp(44px, 5vw, 74px);
+            height: clamp(44px, 5vw, 74px);
+            background: radial-gradient(circle at 36% 36%, #fffde7, #ffe082);
+            border-radius: 50%;
+            box-shadow: 0 0 18px 8px rgba(255, 224, 130, 0.55),
+                        0 0 55px 18px rgba(255, 224, 130, 0.2);
+        }
+
+        .scene-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Twinkling stars */
+        .star {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            animation: twinkle ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.2; transform: scale(0.7); }
+            to   { opacity: 0.9; transform: scale(1.4); }
+        }
+
+        /* ── Snowflakes ─────────────────────────────── */
+        .snowflake {
+            position: fixed;
+            top: -2em;
+            color: #fff;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: snowfall linear forwards;
+        }
+        @keyframes snowfall {
+            to { top: 110vh; transform: rotate(720deg); }
+        }
+
+        /* ── Sparkle ────────────────────────────────── */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            animation: sparkleAnim ease-out forwards;
+        }
+        @keyframes sparkleAnim {
+            0%   { transform: scale(0.5) translateY(0);    opacity: 1; }
+            100% { transform: scale(1.6) translateY(-35px); opacity: 0; }
+        }
+
+        /* ── Confetti ───────────────────────────────── */
+        .confetti {
+            position: fixed;
+            top: -12px;
+            pointer-events: none;
+            z-index: 200;
+            border-radius: 2px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            to { top: 110vh; transform: rotate(720deg); }
+        }
+
+        /* ── Layout ─────────────────────────────────── */
+        .container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 15px 40px;
+        }
+
+        /* ── Header ─────────────────────────────────── */
+        .main-title {
+            color: #ffd700;
+            font-size: clamp(2rem, 5.5vw, 4.5rem);
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(255, 200, 0, 0.8), 2px 2px 0 #6b0000;
+            text-align: center;
+            margin: 10px 0 5px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255, 200, 0, 0.5), 2px 2px 0 #6b0000; }
+            to   { text-shadow: 0 0 30px rgba(255, 200, 0, 1), 0 0 55px rgba(255, 215, 0, 0.4), 2px 2px 0 #6b0000; }
+        }
+
+        .subtitle {
+            color: #fff;
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8), 0 0 14px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        /* ── Countdown grid ─────────────────────────── */
+        .countdown-grid {
+            display: flex;
+            gap: clamp(8px, 2vw, 18px);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 12px 0;
+        }
+
+        .countdown-box {
+            background: rgba(120, 0, 0, 0.88);
+            border: 3px solid #ffd700;
+            border-radius: 16px;
+            padding: clamp(12px, 3vw, 24px) clamp(14px, 3vw, 28px);
+            text-align: center;
+            min-width: clamp(80px, 18vw, 140px);
+            box-shadow: 0 0 18px rgba(255, 215, 0, 0.25), inset 0 0 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        .countdown-box:hover { transform: scale(1.06); }
+
+        .countdown-number {
+            color: #ffd700;
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+        .countdown-number.pop { animation: popAnim 0.2s ease; }
+        @keyframes popAnim {
+            0%   { transform: scale(1);    color: #ffd700; }
+            50%  { transform: scale(1.3);  color: #ffffff; }
+            100% { transform: scale(1);    color: #ffd700; }
+        }
+
+        .countdown-label {
+            color: #fff;
+            font-size: clamp(0.85rem, 2vw, 1.3rem);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── Christmas-day message ──────────────────── */
+        .xmas-message {
+            color: #ffd700;
+            font-size: clamp(2.5rem, 7vw, 6rem);
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(255, 200, 0, 1), 2px 2px 0 #8b0000;
+            animation: xmasBounce 0.6s ease infinite alternate;
+        }
+        @keyframes xmasBounce {
+            from { transform: translateY(0)   scale(1); }
+            to   { transform: translateY(-12px) scale(1.04); }
+        }
+
+        /* ── Rotating fun message ───────────────────── */
+        .fun-message {
+            color: #ffe082;
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
+            text-align: center;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+            margin: 8px 0 16px;
+            min-height: 2.2em;
+            transition: opacity 0.5s, color 0.3s;
+        }
+
+        /* ── Buttons ────────────────────────────────── */
+        .fun-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 10px 0 18px;
+        }
+
+        .fun-btn {
+            padding: clamp(9px, 2vw, 14px) clamp(16px, 3vw, 28px);
+            font-size: clamp(0.95rem, 2vw, 1.4rem);
+            font-family: inherit;
+            font-weight: 700;
+            background: linear-gradient(135deg, #b00000, #7a0000);
+            color: #ffd700;
+            border: 3px solid #ffd700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        .fun-btn:hover  { transform: translateY(-3px) scale(1.06); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 215, 0, 0.3); }
+        .fun-btn:active { transform: scale(0.97); }
+
+        /* Bell shake animation */
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            20%      { transform: rotate(-18deg) scale(1.15); }
+            40%      { transform: rotate(18deg)  scale(1.15); }
+            60%      { transform: rotate(-12deg) scale(1.1); }
+            80%      { transform: rotate(12deg)  scale(1.1); }
+        }
+        .shaking { animation: shake 0.5s ease; }
+
+        /* ── Wish list ──────────────────────────────── */
+        .wishlist-section {
+            background: rgba(160, 0, 0, 0.92);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: clamp(16px, 3vw, 28px);
+            max-width: 520px;
+            width: 100%;
+            margin: 0 auto 20px;
+        }
+
+        .wishlist-title {
+            color: #ffd700;
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .wish-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .wish-input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-family: inherit;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .wish-input::placeholder { color: rgba(255, 255, 255, 0.45); }
+        .wish-input:focus { border-color: #ff6b6b; background: rgba(255, 255, 255, 0.16); }
+
+        .add-wish-btn {
+            padding: 10px 18px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-family: inherit;
+            font-weight: 700;
+            background: #b00000;
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .add-wish-btn:hover  { background: #d40000; transform: scale(1.05); }
+        .add-wish-btn:active { transform: scale(0.97); }
+
+        .wish-list {
+            list-style: none;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .wish-list::-webkit-scrollbar       { width: 6px; }
+        .wish-list::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 3px; }
+        .wish-list::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 3px; }
+
+        .wish-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(120, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 7px;
+            color: #fff;
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-15px); opacity: 0; }
+            to   { transform: translateX(0);     opacity: 1; }
+        }
+
+        .remove-wish {
+            background: none;
+            border: none;
+            color: #ff9999;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0 4px;
+            margin-left: 8px;
+            transition: color 0.2s, transform 0.2s;
+            flex-shrink: 0;
+        }
+        .remove-wish:hover { color: #ff4444; transform: scale(1.25); }
+
+        .empty-wish {
+            color: rgba(255, 255, 255, 0.45);
+            text-align: center;
+            font-size: 1.05rem;
+            padding: 10px 0;
+        }
+
+        /* ── Santa Modal ────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 900;
+            display: none;
+        }
+        .modal-overlay.open { display: block; }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(130, 0, 0, 0.97);
+            border: 4px solid #ffd700;
+            border-radius: 22px;
+            padding: clamp(20px, 5vw, 40px) clamp(24px, 6vw, 50px);
+            text-align: center;
+            z-index: 1000;
+            max-width: 90vw;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal.open { transform: translate(-50%, -50%) scale(1); }
+
+        .modal-title { color: #ffd700; font-size: clamp(2rem, 6vw, 4rem); font-weight: 700; }
+        .modal-body  { color: #fff;    font-size: clamp(1rem, 3vw, 1.8rem); margin-top: 10px; }
+
+        .modal-close {
+            margin-top: 22px;
+            padding: 10px 32px;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-family: inherit;
+            font-weight: 700;
+            background: #ffd700;
+            color: #7a0000;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: #ffe84a; }
+
+        /* ── Footer ─────────────────────────────────── */
+        .footer {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            text-align: center;
+            margin-top: auto;
+            padding-top: 20px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
         }
     </style>
 </head>
 <body>
-    <center>
-        <h1 id="header"></h1>
-        <p>The number of day left til Christmas</p>
-        <h2 id="countdown_clock"></h2>
-    </center>
+    <!-- Christmas background scene (replaces old snowtree.gif) -->
+    <div class="xmas-scene" aria-hidden="true">
+        <div class="moon"></div>
+        <svg class="scene-svg" viewBox="0 0 1440 210" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background far hills -->
+            <ellipse cx="360" cy="240" rx="520" ry="130" fill="#90caf9" opacity="0.45"/>
+            <ellipse cx="1080" cy="240" rx="520" ry="130" fill="#90caf9" opacity="0.45"/>
+            <!-- Left trees -->
+            <polygon points="42,204 78,78 114,204" fill="#1b5e20"/>
+            <polygon points="52,204 78,95 104,204" fill="#2e7d32"/>
+            <polygon points="64,96 78,80 92,96" fill="white" opacity="0.88"/>
+            <rect x="71" y="200" width="14" height="22" fill="#6d4c41"/>
+            <polygon points="140,207 168,120 196,207" fill="#2e7d32"/>
+            <polygon points="148,207 168,130 188,207" fill="#388e3c" opacity="0.7"/>
+            <polygon points="152,131 168,121 184,131" fill="white" opacity="0.88"/>
+            <rect x="161" y="204" width="12" height="18" fill="#6d4c41"/>
+            <polygon points="198,210 218,155 238,210" fill="#1b5e20" opacity="0.85"/>
+            <polygon points="207,156 218,147 229,156" fill="white" opacity="0.82"/>
+            <rect x="212" y="208" width="10" height="14" fill="#6d4c41"/>
+            <!-- Right trees -->
+            <polygon points="1326,204 1362,78 1398,204" fill="#1b5e20"/>
+            <polygon points="1336,204 1362,95 1388,204" fill="#2e7d32"/>
+            <polygon points="1348,96 1362,80 1376,96" fill="white" opacity="0.88"/>
+            <rect x="1355" y="200" width="14" height="22" fill="#6d4c41"/>
+            <polygon points="1244,207 1272,120 1300,207" fill="#2e7d32"/>
+            <polygon points="1252,207 1272,130 1292,207" fill="#388e3c" opacity="0.7"/>
+            <polygon points="1256,131 1272,121 1288,131" fill="white" opacity="0.88"/>
+            <rect x="1265" y="204" width="12" height="18" fill="#6d4c41"/>
+            <polygon points="1202,210 1222,155 1242,210" fill="#1b5e20" opacity="0.85"/>
+            <polygon points="1211,156 1222,147 1233,156" fill="white" opacity="0.82"/>
+            <rect x="1216" y="208" width="10" height="14" fill="#6d4c41"/>
+            <!-- Front snow hills -->
+            <ellipse cx="720" cy="272" rx="960" ry="145" fill="white"/>
+            <ellipse cx="100" cy="256" rx="290" ry="92" fill="#f0f8ff" opacity="0.9"/>
+            <ellipse cx="1340" cy="258" rx="290" ry="92" fill="#f0f8ff" opacity="0.9"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <h1 class="main-title" id="header">🎄 Christmas Countdown 🎄</h1>
+        <p class="subtitle" id="subtitle">days until Santa arrives! 🎅</p>
+
+        <!-- Countdown boxes -->
+        <div class="countdown-grid" id="countdown-grid">
+            <div class="countdown-box">
+                <span class="countdown-number" id="days">--</span>
+                <span class="countdown-label">🌟 Days</span>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-number" id="hours">--</span>
+                <span class="countdown-label">⏰ Hours</span>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-number" id="minutes">--</span>
+                <span class="countdown-label">⏱️ Minutes</span>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-number" id="seconds">--</span>
+                <span class="countdown-label">✨ Seconds</span>
+            </div>
+        </div>
+
+        <!-- Rotating fun message -->
+        <p class="fun-message" id="fun-message">❄️ Keep watching… Christmas is coming! ❄️</p>
+
+        <!-- Interactive buttons -->
+        <div class="fun-buttons">
+            <button class="fun-btn" onclick="callSanta()">🎅 Call Santa!</button>
+            <button class="fun-btn" id="snow-btn" onclick="toggleSnow(this)">❄️ Toggle Snow</button>
+            <button class="fun-btn" onclick="ringBell(this)">🔔 Ring Bell!</button>
+        </div>
+
+        <!-- Wish list -->
+        <section class="wishlist-section" aria-label="Christmas Wish List">
+            <h2 class="wishlist-title">🎁 My Christmas Wish List 🎁</h2>
+            <div class="wish-input-row">
+                <input
+                    type="text"
+                    class="wish-input"
+                    id="wish-input"
+                    placeholder="What do you want for Christmas?"
+                    maxlength="60"
+                    aria-label="Add a wish"
+                    onkeydown="if(event.key==='Enter') addWish()"
+                />
+                <button class="add-wish-btn" onclick="addWish()">Add 🎁</button>
+            </div>
+            <ul class="wish-list" id="wish-list" aria-live="polite">
+                <li class="empty-wish">No wishes yet! Add your first wish above 🌟</li>
+            </ul>
+        </section>
+
+        <p class="footer">Made with ❤️ and Christmas spirit 🎄</p>
+    </div>
+
+    <!-- Santa Modal -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <p class="modal-title" id="modal-title">🎅 HO HO HO! 🎅</p>
+        <p class="modal-body"  id="modal-body">Santa is on his way!</p>
+        <button class="modal-close" onclick="closeModal()">OK! 🎄</button>
+    </div>
+
     <script>
-        
-        var xmasYear = 2023;
+        /* ==============================================
+           CHRISTMAS COUNTDOWN — JavaScript
+           ============================================== */
+
+        // ── Helpers ────────────────────────────────────
+        function nextChristmas() {
+            var now  = new Date();
+            var xmas = new Date(now.getFullYear(), 11, 25); // Dec 25
+            return now >= xmas ? new Date(now.getFullYear() + 1, 11, 25) : xmas;
+        }
+
+        function pad(n) { return String(n).padStart(2, '0'); }
+
+        function escapeHtml(text) {
+            var d = document.createElement('div');
+            d.appendChild(document.createTextNode(text));
+            return d.innerHTML;
+        }
+
+        // ── Countdown ──────────────────────────────────
+        var prevValues = {};
+
+        function updateCountdown() {
+            var xmas     = nextChristmas();
+            var distance = xmas.getTime() - Date.now();
+
+            document.getElementById('header').textContent =
+                '\uD83C\uDF84 Christmas ' + xmas.getFullYear() + ' Countdown \uD83C\uDF84';
+
+            if (distance <= 0) {
+                // It's Christmas Day!
+                document.getElementById('countdown-grid').innerHTML =
+                    '<p class="xmas-message">\uD83C\uDF84 MERRY CHRISTMAS! \uD83C\uDF84</p>';
+                document.getElementById('subtitle').textContent = '\uD83C\uDF85 Santa is HERE! Ho Ho Ho! \uD83C\uDF85';
+                document.getElementById('fun-message').textContent = '\uD83C\uDF81 Check under the tree! \uD83C\uDF81';
+                launchConfetti();
+                clearInterval(countdownTimer);
+                return;
+            }
+
+            var vals = {
+                days:    Math.floor(distance / 86400000),
+                hours:   Math.floor((distance % 86400000) / 3600000),
+                minutes: Math.floor((distance % 3600000)  / 60000),
+                seconds: Math.floor((distance % 60000)    / 1000)
+            };
+
+            Object.keys(vals).forEach(function(key) {
+                var val = vals[key];
+                var el  = document.getElementById(key);
+                if (!el) return;
+                if (val !== prevValues[key]) {
+                    el.classList.remove('pop');
+                    void el.offsetWidth; // reflow to restart animation
+                    el.classList.add('pop');
+                    el.textContent = pad(val);
+                    prevValues[key] = val;
+                }
+            });
+        }
+
+        var countdownTimer = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // ── Fun Messages ───────────────────────────────
+        var funMessages = [
+            '\u2744\uFE0F Santa is checking his list\u2026 are you on it? \u2744\uFE0F',
+            '\uD83E\uDD8C Rudolph is training his nose for the big night! \uD83E\uDD8C',
+            '\uD83C\uDF81 Presents are being wrapped at the North Pole! \uD83C\uDF81',
+            '\uD83C\uDF6A Don\'t forget to leave cookies for Santa! \uD83C\uDF6A',
+            '\u2B50 Elves are working hard making your gifts! \u2B50',
+            '\uD83E\uDD5B And some milk too! Santa gets thirsty! \uD83E\uDD5B',
+            '\uD83C\uDF84 The Christmas tree smells so amazing! \uD83C\uDF84',
+            '\u26C4 Build a snowman while you wait! \u26C4',
+            '\uD83C\uDFB5 Jingle bells, jingle bells, jingle all the way! \uD83C\uDFB5',
+            '\uD83C\uDF1F Keep being good! Santa is always watching! \uD83C\uDF1F',
+            '\uD83E\uDDE7 Wrap up warm \u2014 it\'s nearly Christmas! \uD83E\uDDE7',
+            '\uD83D\uDEF7 The sleigh is polished and ready to fly! \uD83D\uDEF7'
+        ];
+        var msgIndex = 0;
 
         setInterval(function() {
+            var el = document.getElementById('fun-message');
+            if (!el) return;
+            el.style.opacity = '0';
+            setTimeout(function() {
+                msgIndex = (msgIndex + 1) % funMessages.length;
+                el.textContent = funMessages[msgIndex];
+                el.style.opacity = '1';
+            }, 500);
+        }, 5000);
 
-            document.getElementById("header").innerHTML = "Countdown to Christmas " + xmasYear.toString();
+        function flashMessage(text, duration) {
+            duration = duration || 2500;
+            var el = document.getElementById('fun-message');
+            if (!el) return;
+            el.textContent  = text;
+            el.style.color   = '#ffd700';
+            el.style.opacity = '1';
+            setTimeout(function() {
+                el.textContent = funMessages[msgIndex];
+                el.style.color  = '#ffe082';
+            }, duration);
+        }
 
-            var countDownDate = new Date("Dec 25, " + xmasYear.toString()).getTime();
-            var now = new Date().getTime();
+        // ── Snowfall ───────────────────────────────────
+        var snowEnabled  = true;
+        var SNOW_CHARS   = ['\u2744', '\u2745', '\u2746', '\u00B7', '\u2022', '\u2726'];
 
-            var distance = countDownDate - now;
+        function spawnSnowflake() {
+            if (!snowEnabled) return;
+            var el = document.createElement('span');
+            el.className   = 'snowflake';
+            el.textContent = SNOW_CHARS[Math.floor(Math.random() * SNOW_CHARS.length)];
+            el.setAttribute('aria-hidden', 'true');
+            var size     = (Math.random() * 1.4 + 0.5).toFixed(2);
+            var duration = (Math.random() * 6 + 6).toFixed(1);
+            el.style.cssText =
+                'left:'              + (Math.random() * 100).toFixed(1) + 'vw;' +
+                'font-size:'         + size     + 'em;' +
+                'opacity:'           + (Math.random() * 0.6 + 0.2).toFixed(2) + ';' +
+                'animation-duration:' + duration + 's';
+            document.body.appendChild(el);
+            el.addEventListener('animationend', function() { el.remove(); });
+        }
 
-            // Time calculations for days, hours, minutes and seconds
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        var snowTimer = setInterval(spawnSnowflake, 350);
 
-            if((days+1) > 0) {
-                document.getElementById("countdown_clock").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-            } else if((days + 1) < 0) {
-                xmasYear = xmasYear + 1;
-                setInterval();
+        // ── Stars ──────────────────────────────────────
+        (function spawnStars() {
+            var colors = ['#ffffff', '#ffe082', '#fff9c4', '#ffcc02', '#ff8a65', '#b3e5fc'];
+            var fragment = document.createDocumentFragment();
+            for (var i = 0; i < 50; i++) {
+                var el = document.createElement('div');
+                el.className = 'star';
+                el.setAttribute('aria-hidden', 'true');
+                var size = (Math.random() * 3 + 1.5).toFixed(1);
+                el.style.cssText =
+                    'left:'               + (Math.random() * 100).toFixed(1) + 'vw;' +
+                    'top:'                + (Math.random() * 44).toFixed(1)  + 'vh;' +
+                    'width:'              + size + 'px;' +
+                    'height:'             + size + 'px;' +
+                    'background:'         + colors[Math.floor(Math.random() * colors.length)] + ';' +
+                    'animation-duration:' + (Math.random() * 2.5 + 1.5).toFixed(2) + 's;' +
+                    'animation-delay:'    + (Math.random() * 3).toFixed(2)           + 's';
+                fragment.appendChild(el);
             }
-            else {
-                document.getElementById("countdown_clock").innerHTML = "Merry CHRISTMAS!!!"
-            }
-    
+            document.body.appendChild(fragment);
+        })();
+
+        function toggleSnow(btn) {
+            snowEnabled = !snowEnabled;
+            document.querySelectorAll('.snowflake').forEach(function(s) { s.remove(); });
+            btn.textContent = snowEnabled ? '\u2744\uFE0F Toggle Snow' : '\u2600\uFE0F Enable Snow';
+            flashMessage(snowEnabled
+                ? '\u2744\uFE0F Let it snow, let it snow, let it snow! \u2744\uFE0F'
+                : '\u2600\uFE0F Snow paused!');
+        }
+
+        // ── Click Sparkles ─────────────────────────────
+        var SPARKLE_CHARS = ['\u2B50', '\u2728', '\uD83C\uDF1F', '\uD83D\uDCAB', '\uD83C\uDF84', '\u2744'];
+
+        document.addEventListener('click', function(e) {
+            if (['BUTTON', 'INPUT', 'A'].includes(e.target.tagName)) return;
+            spawnSparkles(e.clientX, e.clientY, 5);
         });
+
+        function spawnSparkles(x, y, count) {
+            for (var i = 0; i < count; i++) {
+                var el = document.createElement('span');
+                el.className   = 'sparkle';
+                el.textContent = SPARKLE_CHARS[Math.floor(Math.random() * SPARKLE_CHARS.length)];
+                el.setAttribute('aria-hidden', 'true');
+                el.style.cssText =
+                    'left:'               + (x + (Math.random() - 0.5) * 70).toFixed(1) + 'px;' +
+                    'top:'                + (y + (Math.random() - 0.5) * 70).toFixed(1) + 'px;' +
+                    'font-size:'          + (Math.random() * 1.4 + 0.6).toFixed(2)       + 'em;' +
+                    'animation-duration:' + (Math.random() * 0.5 + 0.6).toFixed(2)       + 's';
+                document.body.appendChild(el);
+                el.addEventListener('animationend', function() { el.remove(); });
+            }
+        }
+
+        // ── Confetti (Christmas Day!) ──────────────────
+        var CONFETTI_COLORS = ['#ff0000', '#00c200', '#ffd700', '#ffffff', '#ff69b4', '#00bfff'];
+
+        function launchConfetti() {
+            for (var i = 0; i < 120; i++) {
+                (function(delay) {
+                    setTimeout(function() {
+                        var el = document.createElement('div');
+                        el.className = 'confetti';
+                        el.setAttribute('aria-hidden', 'true');
+                        el.style.cssText =
+                            'left:'               + (Math.random() * 100).toFixed(1) + 'vw;' +
+                            'width:'              + (Math.random() * 8 + 5).toFixed(0)  + 'px;' +
+                            'height:'             + (Math.random() * 10 + 8).toFixed(0) + 'px;' +
+                            'background:'         + CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)] + ';' +
+                            'opacity:'            + (Math.random() * 0.6 + 0.4).toFixed(2) + ';' +
+                            'animation-duration:' + (Math.random() * 3 + 2).toFixed(1)     + 's';
+                        document.body.appendChild(el);
+                        el.addEventListener('animationend', function() { el.remove(); });
+                    }, delay);
+                })(i * 25);
+            }
+        }
+
+        // ── Santa Modal ────────────────────────────────
+        var SANTA_MSGS = [
+            { title: '\uD83C\uDF85 HO HO HO! \uD83C\uDF85', body: "I'm making a list and checking it twice!" },
+            { title: '\uD83C\uDF84 Ho Ho Ho! \uD83C\uDF84',  body: 'Keep being good! Your presents are nearly ready!' },
+            { title: '\uD83E\uDD8C HO HO HO! \uD83E\uDD8C',  body: "Rudolph says hi! We'll be there soon!" },
+            { title: '\uD83C\uDF81 Ho Ho Ho! \uD83C\uDF81',  body: 'Your wish list has been received at the North Pole!' },
+            { title: '\u2B50 HO HO HO! \u2B50',              body: 'Mrs. Claus baked extra cookies this year!' },
+            { title: '\uD83D\uDEF7 Ho Ho Ho! \uD83D\uDEF7',  body: 'The sleigh is polished and ready to fly!' }
+        ];
+
+        function callSanta() {
+            var msg = SANTA_MSGS[Math.floor(Math.random() * SANTA_MSGS.length)];
+            document.getElementById('modal-title').textContent = msg.title;
+            document.getElementById('modal-body').textContent  = msg.body;
+            document.getElementById('modal-overlay').classList.add('open');
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('open');
+            document.getElementById('modal').classList.remove('open');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ── Bell ───────────────────────────────────────
+        function ringBell(btn) {
+            btn.classList.remove('shaking');
+            void btn.offsetWidth; // reflow
+            btn.classList.add('shaking');
+            btn.addEventListener('animationend', function() {
+                btn.classList.remove('shaking');
+            }, { once: true });
+            var rect = btn.getBoundingClientRect();
+            spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, 8);
+            flashMessage('\uD83D\uDD14 JINGLE JINGLE JINGLE! \uD83D\uDD14');
+        }
+
+        // ── Wish List ──────────────────────────────────
+        var wishes = loadWishes();
+
+        function loadWishes() {
+            try {
+                return JSON.parse(localStorage.getItem('xmasWishes') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveWishes() {
+            try { localStorage.setItem('xmasWishes', JSON.stringify(wishes)); } catch (e) {}
+        }
+
+        function addWish() {
+            var input = document.getElementById('wish-input');
+            var text  = input.value.trim();
+            if (!text) { input.focus(); return; }
+            wishes.push(text);
+            input.value = '';
+            input.focus();
+            saveWishes();
+            renderWishes();
+            var rect = input.getBoundingClientRect();
+            spawnSparkles(rect.left + rect.width / 2, rect.top, 6);
+        }
+
+        function removeWish(idx) {
+            wishes.splice(idx, 1);
+            saveWishes();
+            renderWishes();
+        }
+
+        function renderWishes() {
+            var list = document.getElementById('wish-list');
+            if (wishes.length === 0) {
+                list.innerHTML = '<li class="empty-wish">No wishes yet! Add your first wish above \uD83C\uDF1F</li>';
+                return;
+            }
+            list.innerHTML = wishes.map(function(w, i) {
+                return '<li class="wish-item">' +
+                    '<span>\uD83C\uDF81 ' + escapeHtml(w) + '</span>' +
+                    '<button class="remove-wish" onclick="removeWish(' + i + ')" aria-label="Remove wish">\u2715</button>' +
+                    '</li>';
+            }).join('');
+        }
+
+        // Render saved wishes on load
+        renderWishes();
     </script>
 </body>
 </html>
